@@ -1,0 +1,84 @@
+---
+title: "BIOS 611 P1"
+author: "Zimu Li 730207136"
+date: "`r format(Sys.time(), '%m/%d/%Y')`"
+output: html_document
+---
+
+# Project 1: A Blog Post on Four Datasets
+
+```{r}
+library(tidyverse)
+data(Orange)
+data(ChickWeight)
+data(ToothGrowth)
+data(esoph)
+```
+
+### 1. `Orange` Dataset
+
+```{r}
+library(tidyverse)
+ggplot(data = Orange) +
+  geom_area(mapping = aes(x = age, y = circumference, fill = Tree)) +
+  theme_bw() +
+  xlab('Age of the Tree') +
+  ylab('Trunk Circumferences (mm)') +
+  geom_vline(xintercept = 484, color='white') +
+  geom_vline(xintercept = 664, color='white') +
+  geom_vline(xintercept = 1004, color='white') +
+  geom_vline(xintercept = 1231, color='white') +
+  geom_vline(xintercept = 1372, color='white') +
+  annotate('text', label='484', x=484, y=0, color='darkblue') +
+  annotate('text', label='664', x=664, y=0, color='darkblue') +
+  annotate('text', label='1,004', x=1004, y=0, color='darkblue') +
+  annotate('text', label='1,231', x=1231, y=0, color='darkblue') +
+  annotate('text', label='1,372', x=1372, y=0, color='darkblue') +
+  annotate('text', label='118', x=118, y=0, color='darkblue') +
+  annotate('text', label='1,582', x=1582, y=0, color='darkblue') +
+  ggtitle("The Growth of Orange Trees")
+```
+
+> This figure was derived from the `Orange` data set in R. It is a list of records of the growth of 5 orange trees. The trunk circumference of each orange tree is measured when it's in an age of 118, 484, 664, 1,004, 1,231, 1,372, and 1,582. As it's shown in the figure, the one with the smallest circumference when it's 118-year-old continues to be the one with the smallest circumference afterward. On the contrary, there's no doubt that the one with the largest circumference when it's 118-year-old turn out to be the largest orange tree.
+
+>When we look at the growth of these five trees in general, we can see that the tendency, as well as the growth proportion, is very much similar. All of these five orange trees experience the highest growth rate since 1,231 years old to 1,372 years old, which the average annual growth of trunk circumference (reported in mm) is `r ((142-120) + (203-172) + (139-115) + (209-179) + (174-142))/5/(1372-1231)`  millimeters. The lowest growth rate just shows up after experiencing the growth rate peak, with a average annual growth of trunk circumference (reported in mm) of `r ((177-174) + (214-209) + (140-139) + (203-203) + (145-142))/5/(1582-1372)` millimeters. The largest average annual growth is more than 17 times the lowest average annual growth.
+
+### 2. `ChickWeight` Dataset
+
+```{r}
+library(tidyverse)
+ggplot(data=ChickWeight, mapping = aes(x = Time, y = weight, color = Chick)) + 
+  geom_line(show.legend = FALSE) + 
+  facet_wrap(~Diet, nrow = 2) + 
+  xlab('Number of Days Since Birth') + 
+  ylab('Body Weight (gm)') + 
+  ggtitle("Growth Curves for Chicks on Four Different Diets")
+```
+
+> This figure was derived from the `ChickWeight` data set in R. It comes from an experiment on the effect of diet on early growth of chicks. There are four groups of protein diet included. The body weights of the chicks are measured at birth and every second day thereafter until day 20, additionally day 21. The growth curves for chicks on different diets are displayed in four different facets in the figure. When looking at each one of them, we can see that there are some individual differences in their body weight, even though the whole group experienced the same protein diet. In general, most of them grow in a similar growth curve, while there're still some special cases shown up. For example, in the top right facet, two lines stand greatly apart from others. One has a very slow growth in body weight since day 6, the other has a much higher growth rate since day 6. When we look at the other three plots, we can see that there's a general rule we can make from all of the four plots. There's little difference in chicks' growth from day 0 to day 6, no matter which diet they are having. Whereas after that, the protein diet begins to have an impact on their body weight, which represents their physical growth. 
+
+### 3. `ToothGrowth` Dataset
+
+```{r}
+library(tidyverse)
+facet_label <- c(OJ = "Orange Juice", VC = "Ascorbic Acid")
+ggplot(data = ToothGrowth, mapping = aes(x = dose, y = len, fill = factor(dose))) + 
+  geom_boxplot() + 
+  facet_grid(.~supp, labeller = labeller(supp = facet_label)) +
+  labs(fill = "Dose Level of Vitamin C", x = "Dose (mg/day)", y = "Tooth Length (mm)", title = "The Effect of Vitamin C on Tooth Growth")
+```
+
+> This figure was derived from the `ToothGrowth` data set in R. It reports the effect of Vitamin C on tooth growth in 60 guinea pigs. In the experiment, each pig received one of three dose levels of Vitamin C by one of two delivery methods, orange juice or ascorbic acid. From this figure, we can see that the higher level of Vitamin C doses, the lengthier their tooth will be, no matter which methods of Vitamin C they get. When comparing the differences of two methods, it appears that orange juice resulted in a more obvious tooth length growth than ascorbic acid for those who received Vitamin C for 0.5 mg/day and 1.0 mg/day. For these two groups, longer teeth tend to use a higher dose. When it comes to 2.0 mg/day, it's harder to tell which one of the two methods will have a larger effect. The average tooth length for those who received VC 2 mg/day by orange juice is `r (25.5+26.4+22.4+24.5+24.8+30.9+26.4+27.3+29.4+23.0)/10`. The average tooth length for those who received VC 2 mg/day by ascorbic acid is `r (23.6+18.5+33.9+25.5+26.4+32.5+26.7+21.5+23.3+29.5)/10`. We can conclude that not much difference in average tooth length when pigs received 2 mg VC per day between the two methods. The only difference is that the variation of tooth length when receiving by ascorbic acid is much larger than by orange juice.
+
+### 4. `esoph` Dataset
+
+```{r}
+library(tidyverse)
+ggplot(data = esoph, mapping = aes(x = alcgp, y = ncases, fill = tobgp)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  labs(fill = "Tobacco Use (g/day)", x = "Alcohol Use (g/day)", y = "Number of Cancer Cases", title = "Cancer Cases by Alcohol and Tobacco Use")
+```
+
+> This figure was derived from the `esoph` data set in R, which is derived from a case-control study of (o)esophageal cancer in Ille-et-Vilaine, France. It records 88 results of a combination of age, alcohol, and tobacco. The above figure focuses on understanding how alcohol consumption and tobacco consumption affect cancer. Before we analyze the figure, We might assume that both tobacco and alcohol have a bad influence on people, and for those who take the largest amount of them will be more likely to have cancer. However, it's not like that as shown in this figure. The largest number of cancer cases appears in the group of people who took 40-79 g/day alcohol and 0-9 g/day tobacco. For the first three alcohol groups (0-39, 40-79, and 80-119 g/day), those who took the least amount of tobacco appears to be most vulnerable when facing cancer. This may seem surprising to many of us.
+
+> As a next step, it would be interesting to look at more than just the number of cancer cases, but actually see the connection between tobacco use and alcohol use, and take age differences into account.
